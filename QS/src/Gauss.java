@@ -18,9 +18,8 @@ public class Gauss {
 
 
 
-    public BitSet getFreeVariables(BitSet[] matrix) {
-        int r = matrix.length;
-        int c = matrix[0].length();
+    public static BitSet getFreeVariables(BitSet[] matrix, int r, int c) {
+
         if (c > r) {
             System.err.println("Matrix is wide...");
             return null;
@@ -46,9 +45,7 @@ public class Gauss {
         return res;
     }
 
-    public BitSet[] transpose(final BitSet[] src) {
-        int r = src.length;
-        int c = src[0].length();
+    public static BitSet[] transpose(final BitSet[] src, int r, int c) {
 
         BitSet[] res = new BitSet[c];
         for (int i = 0;i<c;i++) {
@@ -66,8 +63,7 @@ public class Gauss {
 
     //Prev denotes the solution given by the previous call to this function
     //Free denotes the free variables, calculated by getFreeVariables();
-    public BitSet calcNullSpace(BitSet[] matrix, final BitSet free, final BitSet prev) {
-        int c = matrix[0].length();
+    public static BitSet calcNullSpace(BitSet[] matrix, int r, int c, final BitSet free, final BitSet prev) {
 
         if (free == null || free.isEmpty()) {	//Return zero-vector
             BitSet ret = new BitSet(c);
@@ -90,20 +86,45 @@ public class Gauss {
             //lastRow = lr.length()-1;
             lastRow = lr.nextSetBit(0);
 
+			/*
+			if (lastRow == -1) {
+				System.err.println("lastRow is negative!");
+				System.err.println("prev is: " + prev.toString());
+				printBitSet(prev, prev.size());
+				System.err.println("prev length is " + prev.length());
+				System.err.println("lr is " + lr.toString());
+				printBitSet(lr, lr.size());
+				System.err.println("lr length is " + lr.length());
+
+				System.err.println("Bits 0 and 1 of lr are:");
+				System.err.println("" + lr.get(0));
+				System.err.println("" + lr.get(1));
+
+				System.err.println("free is " + free.toString());
+				printBitSet(free, free.size());
+				System.err.println("free length is " + free.length());
+			}
+			*/
             if (lastRow == -1) {
                 lastRow++;
             }
 
             variables = (BitSet)prev.clone();
 
+            //if (lastRow > 0) {
             variables.set(0,lastRow);
             variables.clear(lastRow);
+            //}
 
+            //System.err.println("variables is now:");
+            //printBitSet(variables, c);
             lastRow--;
         }
 
-        BitSet bsTmp;
+        BitSet bsTmp = new BitSet(c);
+        //System.err.println("lastRow is: " + lastRow);
 
+        //Warning. We assume that the matrix is "high" or square. Might crash otherwise.
         for(int i = lastRow; i >= 0; i--) {	//Lower rows should be all 0 anyway
 
             bsTmp = (BitSet)matrix[i].clone();
@@ -133,10 +154,7 @@ public class Gauss {
         return variables;
     }
 
-    public BitSet[] gaussEliminate(final BitSet[] src) {
-        int r = src.length;
-        int c = src[0].length();
-
+    public static BitSet[] gaussEliminate(final BitSet[] src, int r, int c) {
         BitSet[] res;
         res = (BitSet[])src.clone();	//Use this if you don't want to modify input
         //res = src;	//Use this if you want to modify the input instead
@@ -185,18 +203,16 @@ public class Gauss {
 
         }
 
-
-
         return res;
     }
 
-    public void printMatrix(BitSet[] matrix, int r, int c) {
+    public static void printMatrix(BitSet[] matrix, int r, int c) {
         for (int i = 0;i<r;i++) {
             printBitSet(matrix[i], c);
         }
     }
 
-    public void printBitSet(BitSet bs, int c) {
+    public static void printBitSet(BitSet bs, int c) {
         if (bs != null) {
             for (int j = 0;j<c;j++) {
                 System.err.print(" " + (bs.get(j) == true ? 1 : 0));
