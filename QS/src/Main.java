@@ -3,6 +3,7 @@
  */
 import java.math.BigInteger;
 import java.util.LinkedList;
+import java.util.BitSet;
 
 public class Main {
 
@@ -24,7 +25,41 @@ public class Main {
                 legendrePrimes.add(p);
         }
 
+        int numOfLP = legendrePrimes.size();
+        LinkedList<BigInteger> smoothNumbers = new LinkedList<BigInteger>();
+        while(smoothNumbers.size() < numOfLP) {
+            //TODO find smooth numbers
+        }
+
+        BitSet[] matrix = initializeMatrix(numOfLP, legendrePrimes, smoothNumbers);
+
+        BigInteger[] squares = findSquares(matrix);
+
     }
+
+    private static BigInteger[] findSquares(BitSet[] matrix) {
+        BitSet foo = new BitSet();
+//        foo.set
+
+        return new BigInteger[1];
+    }
+
+    private static BitSet[] initializeMatrix(int numOfLP, LinkedList<BigInteger> legendrePrimes,
+                                             LinkedList<BigInteger> smoothNumbers) {
+
+        BitSet[] matrix = new BitSet[numOfLP];
+
+        for (int i = 0; i < matrix.length; i++){
+            BitSet row = new BitSet(numOfLP);
+            for (int j = 0; j < legendrePrimes.size(); j++) {
+                row.set(j, BigMath.unevenDivider(smoothNumbers.get(i), legendrePrimes.get(j)));
+            }
+            matrix[i] = row;
+        }
+
+        return matrix;
+    }
+
 
     //TODO
     private static BigInteger calcBase(BigInteger n) {

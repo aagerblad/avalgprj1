@@ -18,4 +18,6 @@ public class BigMath {
 		return false;
 	}
 
+    public static boolean unevenDivider(BigInteger bigInteger, BigInteger bigInteger1) {
+    }
 }
