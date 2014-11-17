@@ -10,5 +10,14 @@ public class Main {
 
         BigInteger N = new BigInteger("100000");
 
+        BigInteger B = calcBase(N);
+
+
+
+    }
+
+    //TODO
+    private static BigInteger calcBase(BigInteger n) {
+        return null;
     }
 }
