@@ -12,45 +12,23 @@ public class BigMath {
 		return a;
 	}
 
-	public static int legendre(BigInteger N, BigInteger p) {
-		BigInteger a;
-		BigInteger ret = new BigInteger("1");
+    public static int legendre(BigInteger a, BigInteger p) {
+        if (a.remainder(p).equals(BigInteger.ZERO)) {
+            return 0;
+        }
 
-        // Visst stämmer detta?
-        //if (p.compareTo(BigInteger.ZERO) == 0) {
-        //    return 0;
-        //}
+        BigInteger exponent = p.subtract(BigInteger.ONE);
+        exponent = exponent.divide(BigInteger.valueOf(2));
+        BigInteger result = a.modPow(exponent, p); // 1 <= result <= p - 1
 
-		a = N.mod(p);
-		long pu;
-		pu = p.longValue();
-		long power = (pu - 1) / 2;
-
-        if (p.compareTo(new BigInteger("2")) == 0) // Can I do this? Is it a base case?
+        if (result.equals(BigInteger.ONE)) {
             return 1;
-
-
-		while (power > 0) {
-			if (power % 2 == 1) {
-				ret = ret.multiply(a);
-				ret = ret.mod(p);
-			}
-
-			a = a.multiply(a);
-			a = a.mod(p);
-			power = power / 2;
-		}
-
-		BigInteger temp;
-
-		temp = ret.subtract(p);
-
-		if (temp.compareTo(new BigInteger("-1")) == 0) {
-			ret = ret.subtract(p);
-		}
-
-		return ret.intValue();
-	}
+        } else if (result.equals(p.subtract(BigInteger.ONE))) {
+            return -1;
+        } else {
+            throw new ArithmeticException("Error computing the Legendre symbol.");
+        }
+    }
 
     public static BigInteger sqrt(BigInteger n) {
         BigInteger a = BigInteger.ONE;

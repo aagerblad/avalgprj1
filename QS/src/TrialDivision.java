@@ -10,7 +10,7 @@ public class TrialDivision {
 
     public static LinkedList<BigInteger> trialDivision(BigInteger n) throws FileNotFoundException {
 
-        FileInputStream file = new FileInputStream("QS\\src\\Primenumbers");
+        FileInputStream file = new FileInputStream("/Users/tobbew92/Documents/workspace/avalgprj1/QS/src/Primenumbers");
         Kattio io = new Kattio(file);
 
         LinkedList<BigInteger> factors = new LinkedList<BigInteger>();
