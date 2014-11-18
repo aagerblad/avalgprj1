@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.BitSet;
 
 public class Test {
 
@@ -23,10 +24,33 @@ public class Test {
 
 	}
    public static void testQS() {
-       QS qs = new QS(new BigInteger("87463"));
+       QS qs = new QS(new BigInteger("846563"));
 
        qs.calculateBase();
        qs.calculateFactorBase();
+
+       int rows = qs.getSmoothNumberSize();
+       int columns = qs.getFactorBase().size();
+       BitSet[] matrix = new BitSet[rows];
+
+       qs.generateSmoothNumbers(matrix);
+
+       matrix = Gauss.gaussEliminate(matrix, rows, columns);
+
+       BitSet freeVar = Gauss.getFreeVariables(matrix, rows, columns);
+       System.err.println("Free variables: ");
+       Gauss.printBitSet(freeVar, columns);
+
+       BitSet nullspace = null;
+       while (true) {
+           nullspace = Gauss.calcNullSpace(matrix, rows, columns, freeVar, nullspace);
+           System.err.println("Null space vector: ");
+           Gauss.printBitSet(nullspace, columns);
+           if (nullspace.isEmpty()) {
+               break;
+           }
+       }
+
 
        //System.out.println(hej.get(4));
 

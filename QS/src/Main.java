@@ -13,38 +13,6 @@ public class Main {
         //Test.testLegendre();
         Test.testQS();
 
-        int rows = 10; int columns = 10;
-
-        Random r = new Random();
-        BitSet[] matrix = new BitSet[rows];
-        for (int i = 0; i < matrix.length; i++) {
-            matrix[i] = new BitSet(columns);
-            matrix[i].set(r.nextInt(10));
-//            matrix[i].set(9);
-        }
-
-
-        System.err.println("Old matrix");
-        Gauss.printMatrix(matrix, rows, columns);
-
-        matrix = Gauss.gaussEliminate(matrix, rows, columns);
-
-        System.err.println("Gaussed");
-        Gauss.printMatrix(matrix, rows, columns);
-
-        BitSet freeVar = Gauss.getFreeVariables(matrix, rows, columns);
-        System.err.println("Free variables: ");
-        Gauss.printBitSet(freeVar, columns);
-
-        BitSet nullspace = null;
-        while (true) {
-            nullspace = Gauss.calcNullSpace(matrix, rows, columns, freeVar, nullspace);
-            System.err.println("Null space vector: ");
-            Gauss.printBitSet(nullspace, columns);
-            if (nullspace.isEmpty()) {
-                break;
-            }
-        }
 
 //        BigInteger N = new BigInteger("100000");
 //

@@ -147,6 +147,10 @@ public class QS {
         return sieve(0, smoothNumbers, qValues, matrix);
     }
 
+    public int getSmoothNumberSize() {
+        return factorBase.size() + SMOOTH_OFFSET;
+    }
+
 
 
     private boolean sieve(long offset, LinkedHashSet<BigInteger> smoothingNumbers, float[] qLogValues, BitSet[] matrix) {
@@ -186,6 +190,7 @@ public class QS {
                                 if (q == 1) {
                                     matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
                                     smoothRow = new byte[smoothRow.length];
+                                    System.out.println("added smmoth: " + smoothingNumbers.size());
                                     smoothingNumbers.add(BigInteger.valueOf(x));
                                     break;
                                 }
@@ -203,6 +208,7 @@ public class QS {
                                 if (qValue.equals(BigInteger.ONE)) {
                                     matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
                                     smoothRow = new byte[smoothRow.length];
+                                    System.out.println("added smmoth: " + smoothingNumbers.size());
                                     smoothingNumbers.add(BigInteger.valueOf(x));
                                     break;
                                 }
