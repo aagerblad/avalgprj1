@@ -16,6 +16,11 @@ public class BigMath {
 		BigInteger a;
 		BigInteger ret = new BigInteger("1");
 
+        // Visst stämmer detta?
+        //if (p.compareTo(BigInteger.ZERO) == 0) {
+        //    return 0;
+        //}
+
 		a = N.mod(p);
 		long pu;
 		pu = p.longValue();
@@ -70,17 +75,18 @@ public class BigMath {
             Q = Q / 2;
         }
         BigInteger R;
-        if (S == 1) {
+        if (S == 1) {     // p was 3, cool cool.
             R = N.modPow(BigInteger.valueOf((prime + 1) / 4), BigInteger.valueOf(prime));
         } else {
 
             int residue = 0;
-            int Z;
-            for (Z = 2; ; Z++) {
+            int Z = 2;
+            while (true) {
                 residue = legendre(BigInteger.valueOf(Z), new BigInteger("" + prime));
                 if (residue == -1) {
                     break;
                 }
+                Z++;
             }
 
             BigInteger C = BigInteger.valueOf(Z).modPow(BigInteger.valueOf(Q), BigInteger.valueOf(prime));
@@ -92,24 +98,18 @@ public class BigMath {
             int M = S;
 
             while (t.compareTo(BigInteger.ONE) == 1) {
-                int tempVal = 1;
+                int temp = 1;
                 int i = 1;
                 while (i < M) {
-                    tempVal *= 2;
-                    if (tempVal > Math.pow(2, 20)) {
-                        System.out.println(i + " " + tempVal);
-                        throw new RuntimeException();
-                    }
-                    if (t.modPow(BigInteger.valueOf(tempVal), BigInteger.valueOf(prime)).equals(BigInteger.ONE)) {
+                    temp *= 2;
+
+                    if (t.modPow(BigInteger.valueOf(temp), BigInteger.valueOf(prime)).equals(BigInteger.ONE)) {
                         break;
                     }
                     i++;
                 }
                 if (i == M && i != 1) {
                     i--;
-                }
-                if (M - i > 25) {
-                    throw new RuntimeException();
                 }
 
 
@@ -123,8 +123,8 @@ public class BigMath {
 
         int[] result = new int[]{ R.intValue(), prime - R.intValue() };
         BigInteger sqrtN = sqrt(N);
-        for (int i = 0; i < result.length; i++) {
-            result[i] = (int) ((((long) result[i]) - sqrtN.longValue()) % prime);
+        for (int i = 0; i < 2; i++) {
+            result[i] = (int) ((result[i] - sqrtN.longValue()) % prime);
             if (result[i] < 0) {
                 result[i] += prime;
             }
@@ -196,6 +196,14 @@ public class BigMath {
 
         return retValue;
 
+    }
+
+    public static double log(BigInteger val) {
+        int blex = val.bitLength() - 1022; // any value in 60..1023 is ok
+        if (blex > 0)
+            val = val.shiftRight(blex);
+        double res = Math.log(val.doubleValue());
+        return blex > 0 ? res + blex * Math.log(2.0) : res;
     }
 
     // TODO

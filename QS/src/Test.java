@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -25,7 +24,7 @@ public class Test {
 
 
 
-    }
+	}
 
     public static BigInteger testTrialDivision(BigInteger n) throws FileNotFoundException {
 //        BigInteger n = new BigInteger("837497897981234878");
@@ -46,8 +45,6 @@ public class Test {
         for (BigInteger f : factors)
             System.err.println("F: " + f.toString());
     }
-
-
 
 
     public static void testQS() {
