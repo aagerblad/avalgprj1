@@ -49,7 +49,8 @@ public class Test {
 
 
     public static void testQS() {
-        QS qs = new QS(new BigInteger("846563"));
+        BigInteger n = new BigInteger("125207223");
+        QS qs = new QS(n);
 
         qs.calculateBase();
         qs.calculateFactorBase();
@@ -69,8 +70,21 @@ public class Test {
         BitSet nullspace = null;
         while (true) {
             nullspace = Gauss.calcNullSpace(matrix, rows, columns, freeVar, nullspace);
-            System.err.println("Null space vector: ");
-            Gauss.printBitSet(nullspace, columns);
+
+            BigInteger a = new BigInteger("1");
+            BigInteger b = new BigInteger("1");
+            for (int i = 0; i < rows; i++) {
+                if (nullspace.get(i)) {
+                    a = a.multiply(qs.getSmoothNumbers().get(i)).mod(n);
+                    b = b.multiply(BigInteger.valueOf(qs.getFactorBase().get(i)));
+                }
+            }
+            b = BigMath.sqrt(b);
+//            System.err.println("a: " + a.toString() + " b: " + b.toString());
+            BigInteger f1 = BigMath.gcd(a.subtract(b), n);
+            BigInteger f2 = BigMath.gcd(a.add(b), n);
+            System.err.println("f1: " + f1.toString() + " f2: " + f2.toString());
+//            Gauss.printBitSet(nullspace, columns);
             if (nullspace.isEmpty()) {
                 break;
             }

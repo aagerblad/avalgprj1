@@ -13,16 +13,17 @@ public class Main {
 
         //Test.testLegendre();
 //        Test.testPollardBrent();
-        BigInteger n = new BigInteger("9207023897347344938001");
-        try {
-            n = Test.testTrialDivision(n);
-
-            System.err.println("Pollard!!------\n");
-
-            Test.testPollardBrent(n);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        BigInteger n = new BigInteger("92070546547344938001");
+//        Test.testPollardBrent(n);
+        Test.testQS();
+//        try {
+//            n = Test.testTrialDivision(n);
+//
+//            System.err.println("Pollard!!------\n");
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
 
 //        BigInteger N = new BigInteger("100000");

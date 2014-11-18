@@ -1,8 +1,5 @@
 import java.math.BigInteger;
-import java.util.BitSet;
-import java.util.SortedSet;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,8 +21,8 @@ public class QS {
     private int SIEVE_INTERVAL;
 
     LinkedHashSet<Integer> primes;
-    LinkedHashSet<Integer> factorBase;
-    LinkedHashSet<BigInteger> smoothNumbers;
+    LinkedList<Integer> factorBase;
+    LinkedList<BigInteger> smoothNumbers;
 
     int[]      sieveSolution;
     int[]      sievePrimeOffset;
@@ -37,7 +34,7 @@ public class QS {
         this.N = N;
         sqrtN = BigMath.sqrt(N);
         primes = new LinkedHashSet<Integer>();
-        factorBase = new LinkedHashSet<Integer>();
+        factorBase = new LinkedList<Integer>();
         SIEVE_INTERVAL = (int) Math.pow(N.bitLength() / 10, 5);
     }
 
@@ -52,7 +49,7 @@ public class QS {
         double v = Math.pow(Math.E, exponent);
         System.out.println("v: " + v);
         int b = (int) Math.round(v);
-        B = b * 3; //TODO maybe add scale factor for B
+        B = b * 10; //TODO maybe add scale factor for B
         //B = 300000;
 
     }
@@ -139,7 +136,7 @@ public class QS {
         }
 
 
-        smoothNumbers = new LinkedHashSet<BigInteger>(factorBase.size() + SMOOTH_OFFSET);
+        smoothNumbers = new LinkedList<BigInteger>();
 
         float[] qValues = new float[SIEVE_INTERVAL];
 
@@ -167,7 +164,7 @@ public class QS {
 
 
 
-    private boolean sieve(LinkedHashSet<BigInteger> smoothingNumbers, float[] qLogValues, BitSet[] matrix) {
+    private boolean sieve(LinkedList<BigInteger> smoothingNumbers, float[] qLogValues, BitSet[] matrix) {
         System.out.println("Sieving...");
         long offset = 0;
         int baseSize = factorBase.size();
@@ -279,7 +276,11 @@ public class QS {
         return B;
     }
 
-    public LinkedHashSet<Integer> getFactorBase() {
+    public LinkedList<Integer> getFactorBase() {
         return factorBase;
+    }
+
+    public LinkedList<BigInteger> getSmoothNumbers() {
+        return smoothNumbers;
     }
 }
