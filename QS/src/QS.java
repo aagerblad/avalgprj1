@@ -123,7 +123,7 @@ public class QS {
             } else {
                 int[] xArray = BigMath.shanksTonelli(N, BigInteger.valueOf(prime));
                 float logPrime = (float) Math.log(prime);
-                for (int x : xArray) {
+                for (int x : xArray) {  // loops twice max
                     sievePrimeOffset[pos] = prime;
                     sievePrimeLog[pos] = logPrime;
                     sieveSolution[pos] = x;
@@ -184,7 +184,7 @@ public class QS {
                                     smoothRow[col] = (byte) (smoothRow[col] == 1 ? 0 : 1);
                                 }
                                 if (q == 1) {
-                                    matrix[smoothingNumbers.size()] = smoothRow;     //TODO andreas, typ add row till matrix?
+                                    matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
                                     smoothRow = new byte[smoothRow.length];
                                     smoothingNumbers.add(BigInteger.valueOf(x));
                                     break;
@@ -201,7 +201,7 @@ public class QS {
                                     qr = qValue.divideAndRemainder(largePrime);
                                 }
                                 if (qValue.equals(BigInteger.ONE)) {
-                                    matrix[smoothingNumbers.size()] = smoothRow;        //TODO andreas, typ add row till matrix?
+                                    matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
                                     smoothRow = new byte[smoothRow.length];
                                     smoothingNumbers.add(BigInteger.valueOf(x));
                                     break;
