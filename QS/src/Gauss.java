@@ -16,7 +16,16 @@ public class Gauss {
      * Constructor
      */
 
+    public static BitSet byteArrayToBitSet(byte[] row) {
+        BitSet bs = new BitSet(row.length);
 
+        for (int i = 0; i < row.length; i++) {
+            if (row[i] == 1)
+                bs.set(i);
+        }
+
+        return bs;
+    }
 
     public static BitSet getFreeVariables(BitSet[] matrix, int r, int c) {
 
