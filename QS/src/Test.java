@@ -24,7 +24,9 @@ public class Test {
 
 	}
    public static void testQS() {
-       QS qs = new QS(new BigInteger("846563"));
+       // 874654698127381723817123512312312312312873123563 // funkar inte
+       // 874812123123563 // bra print för null vector
+       QS qs = new QS(new BigInteger("87465435123112312312312212312312123123122312312873123563"));
 
        qs.calculateBase();
        qs.calculateFactorBase();
@@ -35,21 +37,30 @@ public class Test {
 
        qs.generateSmoothNumbers(matrix);
 
+       //Gauss.printMatrix(matrix, rows, columns);
+
        matrix = Gauss.gaussEliminate(matrix, rows, columns);
 
        BitSet freeVar = Gauss.getFreeVariables(matrix, rows, columns);
-       System.err.println("Free variables: ");
-       Gauss.printBitSet(freeVar, columns);
+       System.err.println("---------------------------------------------");
+       System.err.println("---------------------------------------------");
+       System.err.println("---------------------------------------------");
+       //System.err.println("Free variables: ");
+       //Gauss.printBitSet(freeVar, columns);
+       //Gauss.printMatrix(matrix, rows, columns);
 
        BitSet nullspace = null;
        while (true) {
            nullspace = Gauss.calcNullSpace(matrix, rows, columns, freeVar, nullspace);
-           System.err.println("Null space vector: ");
-           Gauss.printBitSet(nullspace, columns);
+           //System.err.println("Null space vector: ");
+           //Gauss.printBitSet(nullspace, columns);
            if (nullspace.isEmpty()) {
                break;
            }
        }
+
+
+
 
 
        //System.out.println(hej.get(4));

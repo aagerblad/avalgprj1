@@ -43,12 +43,17 @@ public class QS {
 
     // Get "optimal" B, using function from course page
     public void calculateBase() {
-        double lg = 2 * Math.log(sqrtN.longValue());
+        double lg = 2 * BigMath.log(sqrtN);
+        System.out.println("lg: " + lg);
         double lglg = lg * Math.log(lg);
+        System.out.println("lglg: " + lglg);
         double exponent = 0.5 * Math.sqrt(lglg);
+        System.out.println("exp: " + exponent);
         double v = Math.pow(Math.E, exponent);
+        System.out.println("v: " + v);
         int b = (int) Math.round(v);
-        B = b; //TODO maybe add scale factor for B
+        B = b * 3; //TODO maybe add scale factor for B
+        //B = 300000;
 
     }
 
@@ -141,10 +146,19 @@ public class QS {
         initQValues(0, qValues, N);
 
         smoothRow = new byte[factorBase.size()];
+
         fBaseArray =  factorBase.toArray(new Integer[factorBase.size()]);
 
+        //int i = 0;
+        //for (Integer f : factorBase) {
+            //System.out.println("factorBase: " + f);
+            //System.out.println("Fbase: " + fBaseArray[i]);
+
+          //  i++;
+        //}
+
         // Returns false if it fails.
-        return sieve(0, smoothNumbers, qValues, matrix);
+        return sieve(smoothNumbers, qValues, matrix);
     }
 
     public int getSmoothNumberSize() {
@@ -153,92 +167,105 @@ public class QS {
 
 
 
-    private boolean sieve(long offset, LinkedHashSet<BigInteger> smoothingNumbers, float[] qLogValues, BitSet[] matrix) {
-
+    private boolean sieve(LinkedHashSet<BigInteger> smoothingNumbers, float[] qLogValues, BitSet[] matrix) {
+        System.out.println("Sieving...");
+        long offset = 0;
         int baseSize = factorBase.size();
-        // iterate through the solutions 'x' and 'y'
-        for (int i = 0; i < sieveSolution.length; i++) {
+        boolean continueSieving = true;
+        long t = 0;
+        stop:
+        while (continueSieving)   {
+
+        t = System.currentTimeMillis();
+
+            // iterate through the solutions 'x' and 'y'
+            for (int i = 0; i < sieveSolution.length; i++) {
 
             long x = sieveSolution[i];
-            int prime = sievePrimeOffset[i];
-            while (x < offset + qLogValues.length) {
-                sieveSolution[i] += prime;
-                int relativeX = (int) (x - offset);
+                int prime = sievePrimeOffset[i];
+                //long hejsan = offset + qLogValues.length;
+                //t = System.currentTimeMillis();
+                while (x < offset + qLogValues.length) {
+                    sieveSolution[i] += prime;
+                    //System.out.println("Offset: " + x);
+                    //System.out.println("x: " + offset);
 
-                if (qLogValues[relativeX] < Float.POSITIVE_INFINITY) {
-                    qLogValues[relativeX] -= primeLogValues[i];
+                    int relativeX = (int) (x - offset);
 
-                    if (qLogValues[relativeX] < (float) Math.log(fBaseArray[fBaseArray.length - 1])) {
-                        BigInteger qValue = ((sqrtN.add(BigInteger.valueOf(x))).multiply(sqrtN.add(BigInteger.valueOf(x)))).subtract(N);
-                        long q = 0;
-                        boolean useLong = false;
-                        for (int col = 0; col < baseSize; col++) {
+                    //if (qLogValues[relativeX] < Float.POSITIVE_INFINITY) {
+                        qLogValues[relativeX] -= primeLogValues[i];
 
-                            if (useLong || qValue.bitLength() < 64) {
-                                if(!useLong){
-                                    q = qValue.longValue();
-                                    useLong = true;
-                                }
+                        if (qLogValues[relativeX] < (float) Math.log(fBaseArray[fBaseArray.length - 1])) {
+                            //System.out.println(qLogValues[relativeX]);
+                            //System.out.println(qLogValues[relativeX]);
 
-                                smoothRow[col] = 0;
-                                long p = fBaseArray[col];
+                            BigInteger qValue = ((sqrtN.add(BigInteger.valueOf(x))).multiply(sqrtN.add(BigInteger.valueOf(x)))).subtract(N);
 
-                                while (q % p == 0) {
-                                    q = q / p;
-                                    smoothRow[col] = (byte) (smoothRow[col] == 1 ? 0 : 1);
-                                }
-                                if (q == 1) {
-                                    matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
-                                    smoothRow = new byte[smoothRow.length];
-                                    System.out.println("added smmoth: " + smoothingNumbers.size());
-                                    smoothingNumbers.add(BigInteger.valueOf(x));
-                                    break;
-                                }
-                            } else {
-                                smoothRow[col] = 0;
-                                long p = fBaseArray[col];
+                            for (int col = 0; col < baseSize; col++) {
 
+                                    smoothRow[col] = 0;
+                                    long p = fBaseArray[col];
+
+
+                                //System.out.println(p);
+                                //System.out.println(qValue);
                                 BigInteger largePrime = BigInteger.valueOf(p);
-                                BigInteger[] qr = qValue.divideAndRemainder(largePrime);
+                                BigInteger[] qr = qValue.divideAndRemainder(largePrime);   //ret 2 values
+                                if (qLogValues[relativeX] < 0.2) {
+
+                                   // System.out.println(qLogValues[relativeX]);
+                                }
+                                //System.out.println("Sieve time: " + (System.currentTimeMillis() - t));
                                 while (qr[1].equals(BigInteger.ZERO)) {
-                                    qValue = qr[0];
-                                    smoothRow[col] = (byte) (smoothRow[col] == 1 ? 0 : 1);
-                                    qr = qValue.divideAndRemainder(largePrime);
-                                }
-                                if (qValue.equals(BigInteger.ONE)) {
-                                    matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
-                                    smoothRow = new byte[smoothRow.length];
-                                    System.out.println("added smmoth: " + smoothingNumbers.size());
-                                    smoothingNumbers.add(BigInteger.valueOf(x));
-                                    break;
-                                }
+                                        //System.out.println("bajs");
+                                        qValue = qr[0];
+                                        smoothRow[col] = (byte) (smoothRow[col] == 1 ? 0 : 1);
+                                        qr = qValue.divideAndRemainder(largePrime);
+                                    }
+                                //System.out.println(qValue);
+                                // TODO får man göra sådär? med qLogValues < 1?????????????????????
+                                    if (qValue.equals(BigInteger.ONE)) {
+                                        matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
+                                        smoothRow = new byte[smoothRow.length];
+                                        System.out.println("added smmoth: " + smoothingNumbers.size());
+                                        smoothingNumbers.add(BigInteger.valueOf(x));
+                                        break;
+                                    }
+
                             }
-                        }
 
 
-                        if (smoothingNumbers.size() >= baseSize + SMOOTH_OFFSET) {
-                            return true;
-                        }
+                            if (smoothingNumbers.size() >= baseSize + SMOOTH_OFFSET) {
+                                continueSieving = false;
+                                break stop;
+                                //return true;
+                            }
 
-                        qLogValues[relativeX] = Float.POSITIVE_INFINITY;
+                            qLogValues[relativeX] = Float.POSITIVE_INFINITY;
+                            //System.out.println("HEJSAN");
+                        //} else {
+                        //}
                     }
+
+
+                    x = sieveSolution[i];
                 }
-
-
-                x = sieveSolution[i];
             }
+
+            offset = offset + qLogValues.length;
+            initQValues(offset, qLogValues, N);
+            //System.out.println("Sieve time: " + (System.currentTimeMillis() - t));
+
         }
-
-        long newOffsetX = offset + qLogValues.length;
-        initQValues(newOffsetX, qLogValues, N);
-        return sieve(newOffsetX, smoothNumbers, qLogValues, matrix);
-
+       // return sieve(smoothNumbers, qLogValues, matrix);
+       return true;
     }
 
     // TODO kolla upp vad ddetta är
     private void initQValues(long offsetX, float[] qLogValues, BigInteger N) {
+        //System.out.println(qLogValues[0]);
         BigInteger qValue = ((sqrtN.add(BigInteger.valueOf(offsetX + qLogValues.length - 1))).multiply(sqrtN.add(BigInteger.valueOf(offsetX + qLogValues.length - 1)))).subtract(N);
-        float qValueForLastX = (float) Math.log(qValue.doubleValue());
+        float qValueForLastX = (float)BigMath.log(qValue);
         for (int x = 0; x < qLogValues.length; x++) {
             qLogValues[x] = qValueForLastX;
         }
