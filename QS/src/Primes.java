@@ -7,6 +7,6 @@ import java.math.BigInteger;
 public class Primes {
 
     static long[] getPrimes() {
-        return new long[] {2, 3, 5};
+        return new long[] {};
     }
 }

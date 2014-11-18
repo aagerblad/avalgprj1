@@ -1,6 +1,7 @@
 /**
  * Created by Andreas on 2014-11-17.
  */
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.BitSet;
@@ -11,7 +12,17 @@ public class Main {
     public static void main(String[] args) {
 
         //Test.testLegendre();
-        Test.testQS();
+//        Test.testPollardBrent();
+        BigInteger n = new BigInteger("9207023897347344938001");
+        try {
+            n = Test.testTrialDivision(n);
+
+            System.err.println("Pollard!!------\n");
+
+            Test.testPollardBrent(n);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
 //        BigInteger N = new BigInteger("100000");
