@@ -10,6 +10,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //Test.testLegendre();
+        Test.testQS();
+
         int rows = 10; int columns = 10;
 
         Random r = new Random();
@@ -77,7 +80,7 @@ public class Main {
         return new BigInteger[1];
     }
 
-    private static BitSet[] initializeMatrix(int numOfLP, LinkedList<BigInteger> legendrePrimes,
+    public static BitSet[] initializeMatrix(int numOfLP, LinkedList<BigInteger> legendrePrimes,
                                              LinkedList<BigInteger> smoothNumbers) {
 
         BitSet[] matrix = new BitSet[numOfLP];

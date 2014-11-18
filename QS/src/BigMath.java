@@ -2,7 +2,6 @@ import java.math.BigInteger;
 
 public class BigMath {
 
-	// TODO
 	public static BigInteger gcd(BigInteger a, BigInteger b) //valid for positive integers.
 	{
 		while (b.compareTo(new BigInteger("0")) == 1) {
@@ -13,15 +12,18 @@ public class BigMath {
 		return a;
 	}
 
-	// TODO
 	public static int legendre(BigInteger N, BigInteger p) {
-		BigInteger a = new BigInteger("0");
+		BigInteger a;
 		BigInteger ret = new BigInteger("1");
 
 		a = N.mod(p);
 		long pu;
 		pu = p.longValue();
 		long power = (pu - 1) / 2;
+
+        if (p.compareTo(new BigInteger("2")) == 0) // Can I do this? Is it a base case?
+            return 1;
+
 
 		while (power > 0) {
 			if (power % 2 == 1) {
@@ -34,7 +36,7 @@ public class BigMath {
 			power = power / 2;
 		}
 
-		BigInteger temp = new BigInteger("0");
+		BigInteger temp;
 
 		temp = ret.subtract(p);
 
@@ -45,11 +47,164 @@ public class BigMath {
 		return ret.intValue();
 	}
 
+    public static BigInteger sqrt(BigInteger n) {
+        BigInteger a = BigInteger.ONE;
+        BigInteger b = new BigInteger(n.shiftRight(5).add(new BigInteger("8")).toString());
+        while(b.compareTo(a) >= 0) {
+            BigInteger mid = new BigInteger(a.add(b).shiftRight(1).toString());
+            if(mid.multiply(mid).compareTo(n) > 0) b = mid.subtract(BigInteger.ONE);
+            else a = mid.add(BigInteger.ONE);
+        }
+        return a.subtract(BigInteger.ONE);
+    }
+
+    // TODO funkar denna verkligen?
+    public static int[] shanksTonelli(BigInteger N, BigInteger p) {
+        int prime = p.intValue();
+        int Q = prime - 1;
+        int S = 0;
+
+
+        while (Q % 2 == 0) {
+            S++;
+            Q = Q / 2;
+        }
+        BigInteger R;
+        if (S == 1) {
+            R = N.modPow(BigInteger.valueOf((prime + 1) / 4), BigInteger.valueOf(prime));
+        } else {
+
+            int residue = 0;
+            int Z;
+            for (Z = 2; ; Z++) {
+                residue = legendre(BigInteger.valueOf(Z), new BigInteger("" + prime));
+                if (residue == -1) {
+                    break;
+                }
+            }
+
+            BigInteger C = BigInteger.valueOf(Z).modPow(BigInteger.valueOf(Q), BigInteger.valueOf(prime));
+
+            R = N.modPow(BigInteger.valueOf((Q + 1) / 2), BigInteger.valueOf(prime));
+
+            BigInteger t = N.modPow(BigInteger.valueOf(Q), BigInteger.valueOf(prime));
+
+            int M = S;
+
+            while (t.compareTo(BigInteger.ONE) == 1) {
+                int tempVal = 1;
+                int i = 1;
+                while (i < M) {
+                    tempVal *= 2;
+                    if (tempVal > Math.pow(2, 20)) {
+                        System.out.println(i + " " + tempVal);
+                        throw new RuntimeException();
+                    }
+                    if (t.modPow(BigInteger.valueOf(tempVal), BigInteger.valueOf(prime)).equals(BigInteger.ONE)) {
+                        break;
+                    }
+                    i++;
+                }
+                if (i == M && i != 1) {
+                    i--;
+                }
+                if (M - i > 25) {
+                    throw new RuntimeException();
+                }
+
+
+                BigInteger b = C.modPow(BigInteger.valueOf((long) Math.pow(2, M - i - 1)), BigInteger.valueOf(prime));
+                R = R.multiply(b).mod(BigInteger.valueOf(prime));
+                t = t.multiply(b).multiply(b).mod(BigInteger.valueOf(prime));
+                C = b.multiply(b).mod(BigInteger.valueOf(prime));
+                M = i;
+            }
+        }
+
+        int[] result = new int[]{ R.intValue(), prime - R.intValue() };
+        BigInteger sqrtN = sqrt(N);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (int) ((((long) result[i]) - sqrtN.longValue()) % prime);
+            if (result[i] < 0) {
+                result[i] += prime;
+            }
+        }
+
+        return result;
+    }
+
+    public static BigInteger OLDshanksTonelli(BigInteger N, BigInteger p) {
+        BigInteger y, b, t;
+        BigInteger retValue;
+        int m;
+        int s = 0;
+
+        if (BigMath.divisible(N, p)) {
+            retValue = new BigInteger("0");
+            return retValue;
+        }
+
+        if (BigMath.legendre(N, p) == -1) {
+            return null;
+        }
+
+        y = new BigInteger("2");
+
+        BigInteger ONE = new BigInteger("1");
+        while (BigMath.legendre(y, p) != -1)
+            y = y.add(ONE);
+
+        retValue = p.subtract(ONE);
+
+        while (retValue.testBit(s))
+            s++;
+        retValue = retValue.shiftRight(s);
+
+        y = y.modPow(retValue, p);
+
+        retValue.shiftRight(1);
+        b = N.modPow(retValue, p);
+
+        retValue = N.multiply(b);
+
+        retValue = retValue.mod(p);
+
+        b = retValue.multiply(b);
+        b = b.mod(p);
+
+        while (b.compareTo(ONE) == 1) {
+            t = b.multiply(b);
+            t = t.mod(p);
+
+            for (m = 1; t.compareTo(ONE) == 1; m++) {
+                t = t.multiply(t);
+                t = t.mod(p);
+            }
+
+            t = new BigInteger("0");
+
+            t = t.setBit(s - m - 1);
+            t = y.modPow(t, p);
+            y = t.multiply(t);
+
+            s = m;
+            retValue = retValue.multiply(t);
+
+            retValue = retValue.mod(p);
+
+        }
+
+        return retValue;
+
+    }
+
+    // TODO
 	public static boolean divisible(BigInteger a, BigInteger b) {
 
 		return false;
 	}
 
+    // TODO
     public static boolean unevenDivider(BigInteger bigInteger, BigInteger bigInteger1) {
         return false;
     }
