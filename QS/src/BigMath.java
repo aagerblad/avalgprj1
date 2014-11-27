@@ -39,7 +39,7 @@ public class BigMath {
         return a.subtract(BigInteger.ONE);
     }
 
-    // TODO få den att fungera alltid, något skumt
+    // TODO få den att fungera alltid, något skumt. DONE, testa också
     public static int[] shanksTonelli(BigInteger N, BigInteger p) {
         int prime = p.intValue();
         int Q = prime - 1;
@@ -79,14 +79,12 @@ public class BigMath {
                 while (i < M) {
                     temp *= 2;
 
-                    if (t.modPow(BigInteger.valueOf(temp), BigInteger.valueOf(prime)).equals(BigInteger.ONE)) {
+                    if (t.modPow(BigInteger.valueOf(temp), BigInteger.valueOf(prime)).equals(BigInteger.ONE))
                         break;
-                    }
                     i++;
                 }
-                if (i == M && i != 1) {
+                if (i == M && i != 1)
                     i--;
-                }
 
 
                 BigInteger b = C.modPow(BigInteger.valueOf((long) Math.pow(2, M - i - 1)), BigInteger.valueOf(prime));

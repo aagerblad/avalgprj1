@@ -51,7 +51,6 @@ public class QS {
 
     public void calculateFactorBase() {
         sieveOfEra();
-        //factorBase.add(2);
         System.out.println("B = " + B);
         //System.out.print("Factor base = ");
         for (int prime : primes) {
@@ -93,11 +92,11 @@ public class QS {
 
     public boolean generateSmoothNumbers(BitSet[] matrix) {
         int sieveSize;
-        if (factorBase.get(0) == 2) {
+        if (factorBase.get(0) == 2)
             sieveSize = factorBase.size() * 2 - 1;
-        } else {
+         else
             sieveSize = factorBase.size() * 2;
-        }
+
 
         // Many arrays storing information for reach factor base position
         sievePrimeLog = new float[sieveSize];
@@ -105,31 +104,31 @@ public class QS {
         sieveSolution = new int[sieveSize];
         primeLogValues = new float[sieveSize];
 
-        int pos = 0;
+        int i = 0;
         // Solve the quadratic congruent equation for every factor in the factor base
         for (int prime : factorBase) {
             if (prime == 2) { //Special case for 2
-                sievePrimeOffset[pos] = prime;
-                sievePrimeLog[pos] = (float) Math.log(prime);
+                sievePrimeOffset[i] = prime;
+                sievePrimeLog[i] = (float) Math.log(prime);
                 BigInteger Q = sqrtN.multiply(sqrtN).subtract(N);
 
                 if (Q.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO))
-                    sieveSolution[pos] = 0;
+                    sieveSolution[i] = 0;
                 else
-                    sieveSolution[pos] = 1;
+                    sieveSolution[i] = 1;
 
-                primeLogValues[pos] = (float) Math.log(prime);
+                primeLogValues[i] = (float) Math.log(prime);
 
-                pos++;
+                i++;
+                //continue;
             } else {
-                int[] xArray = BigMath.shanksTonelli(N, BigInteger.valueOf(prime));
+                int[] congruenceSolutions = BigMath.shanksTonelli(N, BigInteger.valueOf(prime));
                 float logPrime = (float) Math.log(prime);
-                for (int x : xArray) {  // loops twice max
-                    sievePrimeOffset[pos] = prime;
-                    sievePrimeLog[pos] = logPrime;
-                    sieveSolution[pos] = x;
-                    primeLogValues[pos] = (float) Math.log(prime);
-                    pos++;
+
+                for (int x : congruenceSolutions) {  // loops twice max
+                    sievePrimeOffset[i] = prime; sievePrimeLog[i] = logPrime;
+                    sieveSolution[i] = x; primeLogValues[i] = (float) Math.log(prime);
+                    i++;
                 }
             }
         }
@@ -224,6 +223,7 @@ public class QS {
                             }
                             //System.out.println(qValue);
                             // TODO får man göra sådär? med logsQ < 1?????????????????????       t.ex.
+                            // ta en närmare titt på detta
                             if (qValue.equals(BigInteger.ONE) || logsQ[xNew] < 1) {
                                 matrix[smoothingNumbers.size()] = Gauss.byteArrayToBitSet(smoothRow);
                                 smoothRow = new byte[smoothRow.length];
@@ -238,7 +238,6 @@ public class QS {
                         if (smoothingNumbers.size() >= baseSize + SMOOTH_OFFSET) {
                             continueSieving = false;
                             break stop;
-                            //return true;
                         }
 
                         logsQ[xNew] = Float.POSITIVE_INFINITY;

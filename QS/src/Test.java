@@ -50,9 +50,9 @@ public class Test {
 
     public static void testQS() {
 
-        //System.out.println(MillerRabin.isPrime(new BigInteger("998"), 5));
+        System.out.println(MillerRabin.isPrime(new BigInteger("3"), 5));
 
-        BigInteger n = new BigInteger("9120002234300000000");
+        BigInteger n = new BigInteger("920700765300");
         QS qs = new QS(n);
 
         qs.calculateBase();
