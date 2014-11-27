@@ -42,7 +42,9 @@ public class Test {
     public static void testPollardBrent(BigInteger n) {
 //        BigInteger n = new BigInteger("762348787734763");
 //        BigInteger n = new BigInteger("2637885078667");
-        LinkedList<BigInteger> factors = PollardBrent.findAllFactors(n);
+        long t = System.currentTimeMillis();
+        LinkedList<BigInteger> factors = PollardBrent.factor(n);
+        System.out.println("Time is: " + (System.currentTimeMillis() - t));
         for (BigInteger f : factors)
             System.err.println("F: " + f.toString());
     }
