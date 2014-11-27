@@ -12,22 +12,20 @@ public class BigMath {
 		return a;
 	}
 
-    public static int legendre(BigInteger a, BigInteger p) {
-        if (a.remainder(p).equals(BigInteger.ZERO)) {
+    public static int legendre(BigInteger N, BigInteger p) {
+        if (N.remainder(p).equals(BigInteger.ZERO))
             return 0;
-        }
 
         BigInteger exponent = p.subtract(BigInteger.ONE);
         exponent = exponent.divide(BigInteger.valueOf(2));
-        BigInteger result = a.modPow(exponent, p); // 1 <= result <= p - 1
+        BigInteger result = N.modPow(exponent, p);
 
-        if (result.equals(BigInteger.ONE)) {
+        if (result.equals(BigInteger.ONE))
             return 1;
-        } else if (result.equals(p.subtract(BigInteger.ONE))) {
+        else if (result.equals(p.subtract(BigInteger.ONE)))
             return -1;
-        } else {
-            throw new ArithmeticException("Error computing the Legendre symbol.");
-        }
+
+        return 12610;
     }
 
     public static BigInteger sqrt(BigInteger n) {
@@ -41,7 +39,7 @@ public class BigMath {
         return a.subtract(BigInteger.ONE);
     }
 
-    // TODO funkar denna verkligen?
+    // TODO få den att fungera alltid, något skumt
     public static int[] shanksTonelli(BigInteger N, BigInteger p) {
         int prime = p.intValue();
         int Q = prime - 1;

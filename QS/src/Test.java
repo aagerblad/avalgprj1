@@ -49,7 +49,10 @@ public class Test {
 
 
     public static void testQS() {
-        BigInteger n = new BigInteger("125207223");
+
+        //System.out.println(MillerRabin.isPrime(new BigInteger("998"), 5));
+
+        BigInteger n = new BigInteger("9120002234300000000");
         QS qs = new QS(n);
 
         qs.calculateBase();
@@ -68,6 +71,9 @@ public class Test {
         Gauss.printBitSet(freeVar, columns);
 
         BitSet nullspace = null;
+        Gauss.printMatrix(matrix, rows, columns);
+
+        /*
         while (true) {
             nullspace = Gauss.calcNullSpace(matrix, rows, columns, freeVar, nullspace);
 
@@ -83,12 +89,13 @@ public class Test {
 //            System.err.println("a: " + a.toString() + " b: " + b.toString());
             BigInteger f1 = BigMath.gcd(a.subtract(b), n);
             BigInteger f2 = BigMath.gcd(a.add(b), n);
-            System.err.println("f1: " + f1.toString() + " f2: " + f2.toString());
+                System.err.println("f1: " + f1.toString() + " f2: " + f2.toString());
 //            Gauss.printBitSet(nullspace, columns);
             if (nullspace.isEmpty()) {
                 break;
             }
         }
+                 */
 
 
         //System.out.println(hej.get(4));
