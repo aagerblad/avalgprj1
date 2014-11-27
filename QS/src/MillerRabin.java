@@ -5,6 +5,14 @@ import java.math.BigInteger;
 
 public class MillerRabin
 {
+    public static boolean isPrime(BigInteger n, int iterations) {
+
+        for (int i = 0; i < iterations; i++)
+            if (!millerrabin(n))
+                return false;
+
+        return true;
+    }
 
     private static boolean millerrabin(BigInteger n) {
 
@@ -14,13 +22,14 @@ public class MillerRabin
         //if n.compareTo()
 
         Random r = new Random();
-        BigInteger temp;
+        BigInteger a;
 
         do {
-            temp = new BigInteger(n.bitLength()-1, r);
-        } while (temp.compareTo(BigInteger.ONE) <= 0);
+            a = new BigInteger(n.bitLength()-1, r);     //randomize
+        } while (a.compareTo(BigInteger.ONE) <= 0);
 
-        if (!BigMath.gcd(temp, n).equals(BigInteger.ONE)) return false;
+        if (!BigMath.gcd(a, n).equals(BigInteger.ONE))
+            return false;
 
 
         BigInteger base = n.subtract(BigInteger.ONE);
@@ -32,7 +41,7 @@ public class MillerRabin
             k++;
         }
 
-        BigInteger current = temp.modPow(base,n);
+        BigInteger current = a.modPow(base,n);
 
         if (current.equals(BigInteger.ONE))
             return true;
@@ -47,11 +56,4 @@ public class MillerRabin
         return false;
     }
 
-    public static boolean isPrime(BigInteger n, int numTimes) {
-
-        for (int i=0; i<numTimes; i++)
-            if (!millerrabin(n)) return false;
-
-        return true;
-    }
 }
